@@ -1,3 +1,4 @@
+#Copyright (c) 2004-2022 ltBerryshdo
 from mcdreforged.api.all import *
 from .config import *
 import json
