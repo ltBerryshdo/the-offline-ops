@@ -1,0 +1,11 @@
+{
+    "id": "the_offline_ops",
+    "version": "0.1",
+    "name": "The Offline ops",
+    "description": "为未开启在线模式（正版验证）的服务器提供了管理员账号保护的一种方法。",
+    "author": "ltBerryshdo",
+    "link": "https://github.com/ltBerryshdo/",
+    "dependencies": {
+        "mcdreforged": ">=2.6.0"
+    }
+}
