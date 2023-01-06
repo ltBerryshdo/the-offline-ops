@@ -3,6 +3,7 @@ from mcdreforged.api.all import *
 from .config import *
 import json
 import os.path
+import time
 
 class Player():
     def __init__(self):
@@ -15,6 +16,7 @@ class Player():
         return get_uuid(player, serverDir)
 
 serverDir: str
+kickPlayer: bool
 
 
 def on_load(server: PluginServerInterface, prev_module):
@@ -73,13 +75,15 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
     playerObj = Player()
     playerObj.playerName = player
     playerObj.playerUUID = playerObj.uuid(player)
+    playerObj.permission = get_server_permission(player)
     playerObj.permission_MCDR = server.get_permission_level(playerObj.playerName)
 
-    #global config
-    #config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
-    if config.notOpsPlayerProtect:
-            print(config.protectivePlayer)
-            print(playerObj.playerName)
+    global config
+    config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
+    if playerObj.permission != None:                                            #是op
+        timer(server, playerObj.playerName)
+    if config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys()): #是受保护的玩家
+        timer(server, playerObj.playerName)
         
 
 def get_uuid(playerName: str, dir: str):
@@ -94,3 +98,29 @@ def get_uuid(playerName: str, dir: str):
             if jsonAll[i]['name'] == playerName:                    #检查玩家名字
                 playerUUID = jsonAll[i]['uuid']
                 return playerUUID
+
+def get_server_permission(playerName: str) -> int:
+    opsPath = os.path.join(serverDir, 'ops.json')
+    with open(opsPath, 'r') as opsJson:                         #__init__.py    get_uuid()
+        jsonAll = json.load(opsJson)
+        jsonObjectNum = len(jsonAll)
+
+        for i in range(jsonObjectNum):
+            if playerName == jsonAll[i]['name']:
+                return jsonAll[i]['level']
+
+@new_thread
+def timer(server: PluginServerInterface, playerName: str):
+    for i in range(30):
+        server.execute('effect give ' + playerName + ' slowness 3 100 true')
+        server.execute('effect give ' + playerName + ' mining_fatigue 3 100 true')
+        server.execute('effect give ' + playerName + ' weakness 3 100 true')
+        server.execute('effect give ' + playerName + ' blindness 3 100 true')
+        time.sleep(1)
+        i += 1
+
+    if kickPlayer:
+        #server.execute('kick ' + playerName)
+        print('kick')
+    else:
+        server.execute('effect clear ' + playerName)

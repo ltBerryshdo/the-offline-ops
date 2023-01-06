@@ -42,7 +42,7 @@ def cmd_tree_protect_player_disable(source: CommandSource):
 
 def cmd_tree_sudo_enable(source: CommandSource):
     opsPath = os.path.join(serverPath, 'ops.json')
-    with open(opsPath, 'r') as opsJson:                         #__init__.py    80
+    with open(opsPath, 'r') as opsJson:                         #__init__.py    get_uuid()
         jsonAll = json.load(opsJson)
         jsonObjectNum = len(jsonAll)
 
