@@ -58,9 +58,8 @@ def register_command(server: PluginServerInterface):
                 runs(cmd_tree_sudo_disable))).
         then(Literal('protectPlayer').
             then(Text('playerName').
-                runs(cmd_tree_protect_player).
                 then(GreedyText('password').
-                    runs(cmd_tree_add_password))))
+                    runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'], ctx['password'])))))
     )
 
 def register_help_message(server: PluginServerInterface):
@@ -76,15 +75,11 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
     playerObj.playerUUID = playerObj.uuid(player)
     playerObj.permission_MCDR = server.get_permission_level(playerObj.playerName)
 
-    global config
-    config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
+    #global config
+    #config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
     if config.notOpsPlayerProtect:
-        if config.protectivePlayer.get(playerObj.playerName) == 'NULL':  #检查是否为受保护的玩家
-            server.tell(info.player, '未记录密码，使用初始密码：NULL')
-        else:
             print(config.protectivePlayer)
             print(playerObj.playerName)
-
         
 
 def get_uuid(playerName: str, dir: str):

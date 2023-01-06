@@ -32,10 +32,12 @@ def save_config():                                                      #手动�
 
 def cmd_tree_protect_player_enable(source: CommandSource):
     config.notOpsPlayerProtect = True
+    source.reply('非op玩家保护开启')
     save_config()
 
 def cmd_tree_protect_player_disable(source: CommandSource):
     config.notOpsPlayerProtect = False
+    source.reply('非op玩家保护已关闭')
     save_config()
 
 def cmd_tree_sudo_enable(source: CommandSource):
@@ -55,6 +57,8 @@ def cmd_tree_sudo_enable(source: CommandSource):
             level = jsonAll[i]['level'], bypassesPlayerLimit = jsonAll[i]['bypassesPlayerLimit']))
     with open(opsPath, 'w') as opsJson:                         #清空ops.json
         json.dump(list(), opsJson)
+    source.reply('提升权限已开启')
+    source.reply('需要重启服务器才能生效')
     save_config()
 
 def cmd_tree_sudo_disable(source: CommandSource):
@@ -66,21 +70,17 @@ def cmd_tree_sudo_disable(source: CommandSource):
         json.dump(config.ops, opsJson, ensure_ascii=False, indent=4)
 
     config.ops.clear()
+    source.reply('提升权限已关闭')
+    source.reply('需要重启服务器才能生效')
     save_config()
 
-def cmd_tree_protect_player(source: CommandSource, context: CommandContext):
-    name = context['playerName']
+def cmd_tree_protect_player(source: CommandSource, name: str, password: str):
     if not config.notOpsPlayerProtect:
         source.reply('notOpsPlayerProtect已关闭，请先开启此选项')
         return
-    dictkv = {name : 'NULL'}
+    dictkv = {name : password}
     config.protectivePlayer.update(dictkv)
-    save_config()
-
-def cmd_tree_add_password(source: CommandSource, context: CommandSource):
-    name = context['playerName']
-    password = context['password']
-    config.protectivePlayer[name] = password
+    source.reply(dictkv + '已添加')
     save_config()
 
 
