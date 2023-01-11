@@ -1,6 +1,7 @@
-#Copyright (c) 2004-2022 ltBerryshdo
+#Copyright (c) 2004-2023 ltBerryshdo
 from mcdreforged.api.all import *
 from .config import *
+from .network import *
 import json
 import os.path
 import time
