@@ -1,7 +1,6 @@
 #Copyright (c) 2004-2023 ltBerryshdo
 from mcdreforged.api.all import *
 from .config import *
-from .network import *
 import json
 import os.path
 import time
@@ -85,7 +84,10 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
         timer(server, playerObj.playerName)
     if config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys()): #是受保护的玩家
         timer(server, playerObj.playerName)
-        
+
+def on_info(server: PluginServerInterface, info: Info):
+    pass
+
 
 def get_uuid(playerName: str, dir: str):
     filePath = '{}/usercache.json'.format(dir)
