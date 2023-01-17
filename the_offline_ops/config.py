@@ -5,9 +5,8 @@ import json
 
 class plgConfig(Serializable):                  #配置类
     notOpsPlayerProtect: bool = True
-    sudo: bool = False
+    allPlayerProtect: bool = False
     protectivePlayer: dict = {}
-    ops: list = []
 
 config = plgConfig()
 configFilePath = None
@@ -39,7 +38,6 @@ def cmd_tree_protect_player_disable(source: CommandSource):
     config.notOpsPlayerProtect = False
     source.reply('非op玩家保护已关闭')
     save_config()
-
 '''
 def cmd_tree_sudo_enable(source: CommandSource):
     opsPath = os.path.join(serverPath, 'ops.json')
@@ -75,13 +73,23 @@ def cmd_tree_sudo_disable(source: CommandSource):
     source.reply('需要重启服务器才能生效')
     save_config()
 '''
-def cmd_tree_protect_player(source: CommandSource, name: str, password: str):
+def cmd_tree_protect_player(source: CommandSource, name: str):
     if not config.notOpsPlayerProtect:
         source.reply('notOpsPlayerProtect已关闭，请先开启此选项')
         return
-    dictkv = {name : password}
+    dictkv = {name : 'NULL'}
     config.protectivePlayer.update(dictkv)
     source.reply(dictkv + '已添加')
+    save_config()
+
+def cmd_tree_all_player_protect_enable(source: CommandSource):
+    config.allPlayerProtect = True
+    source.reply('全体玩家保护已开启')
+    save_config()
+
+def cmd_tree_all_player_protect_disable(source: CommandSource):
+    config.allPlayerProtect = False
+    source.reply('全体玩家保护已关闭')
     save_config()
 
 

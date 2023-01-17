@@ -16,7 +16,7 @@ class Player():
         return get_uuid(player, serverDir)
 
 serverDir: str
-kickPlayer: bool
+IPaddress: str
 
 
 def on_load(server: PluginServerInterface, prev_module):
@@ -56,8 +56,12 @@ def register_command(server: PluginServerInterface):
                 
         then(Literal('protectPlayer').
             then(Text('playerName').
-                then(GreedyText('password').
-                    runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'], ctx['password'])))))
+                runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'])))).
+        then(Literal('allPlayerProtect').
+            then(Literal('enable').
+                runs(cmd_tree_all_player_protect_enable)).
+            then(Literal('disable').
+                runs(cmd_tree_all_player_protect_disable)))
     )
 
 def register_help_message(server: PluginServerInterface):
@@ -76,15 +80,23 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
 
     global config
     config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
-    if playerObj.permission != None:                                            #是op
-        timer(server, playerObj.playerName)
-    if config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys()): #是受保护的玩家
-        timer(server, playerObj.playerName)
+
+    if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
+        cmd_tree_protect_player(CommandSource, playerObj.playerName)
+
+    if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
+        if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
+            global IPaddress
+            config.protectivePlayer[playerObj.playerName] = IPaddress
+        elif config.protectivePlayer[playerObj.playerName] != IPaddress:
+            server.broadcast('{}的信息与记录不符，已被踢出服务器，如记录的信息错误或变更，请向MCDR管理员提出请求！'.format(playerObj.playerName))
+            server.execute('kick ' + playerObj.playerName)
 
 def on_info(server: PluginServerInterface, info: Info):
     if not info.is_user and re.search(r'logged in with entity id', info.content):
         logginInfo = re.search(r'(\w+)\[/(\d+.\d+.\d+.\d+):(\d+)\] logged in with entity id', info.content)
         if logginInfo:
+            global IPaddress
             playerName = logginInfo.group(1)
             IPaddress = logginInfo.group(2)
             port = logginInfo.group(3)
