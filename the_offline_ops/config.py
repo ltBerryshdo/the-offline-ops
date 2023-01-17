@@ -40,6 +40,7 @@ def cmd_tree_protect_player_disable(source: CommandSource):
     source.reply('非op玩家保护已关闭')
     save_config()
 
+'''
 def cmd_tree_sudo_enable(source: CommandSource):
     opsPath = os.path.join(serverPath, 'ops.json')
     with open(opsPath, 'r') as opsJson:                         #__init__.py    get_uuid()
@@ -73,7 +74,7 @@ def cmd_tree_sudo_disable(source: CommandSource):
     source.reply('提升权限已关闭')
     source.reply('需要重启服务器才能生效')
     save_config()
-
+'''
 def cmd_tree_protect_player(source: CommandSource, name: str, password: str):
     if not config.notOpsPlayerProtect:
         source.reply('notOpsPlayerProtect已关闭，请先开启此选项')

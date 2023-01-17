@@ -3,7 +3,7 @@ from mcdreforged.api.all import *
 from .config import *
 import json
 import os.path
-import time
+import re
 
 class Player():
     def __init__(self):
@@ -53,11 +53,7 @@ def register_command(server: PluginServerInterface):
                 runs(cmd_tree_protect_player_enable)).
             then(Literal('disable').
                 runs(cmd_tree_protect_player_disable))).
-        then(Literal('sudo').
-            then(Literal('enable').
-                runs(cmd_tree_sudo_enable)).
-            then(Literal('disable').
-                runs(cmd_tree_sudo_disable))).
+                
         then(Literal('protectPlayer').
             then(Text('playerName').
                 then(GreedyText('password').
@@ -86,7 +82,12 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
         timer(server, playerObj.playerName)
 
 def on_info(server: PluginServerInterface, info: Info):
-    pass
+    if not info.is_user and re.search(r'logged in with entity id', info.content):
+        logginInfo = re.search(r'(\w+)\[/(\d+.\d+.\d+.\d+):(\d+)\] logged in with entity id', info.content)
+        if logginInfo:
+            playerName = logginInfo.group(1)
+            IPaddress = logginInfo.group(2)
+            port = logginInfo.group(3)
 
 
 def get_uuid(playerName: str, dir: str):
@@ -111,19 +112,3 @@ def get_server_permission(playerName: str) -> int:
         for i in range(jsonObjectNum):
             if playerName == jsonAll[i]['name']:
                 return jsonAll[i]['level']
-
-@new_thread
-def timer(server: PluginServerInterface, playerName: str):
-    for i in range(30):
-        server.execute('effect give ' + playerName + ' slowness 3 100 true')
-        server.execute('effect give ' + playerName + ' mining_fatigue 3 100 true')
-        server.execute('effect give ' + playerName + ' weakness 3 100 true')
-        server.execute('effect give ' + playerName + ' blindness 3 100 true')
-        time.sleep(1)
-        i += 1
-
-    if kickPlayer:
-        #server.execute('kick ' + playerName)
-        print('kick')
-    else:
-        server.execute('effect clear ' + playerName)
