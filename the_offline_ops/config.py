@@ -8,6 +8,17 @@ class plgConfig(Serializable):                  #配置类
     allPlayerProtect: bool = False
     protectivePlayer: dict = {}
 
+class Player():
+    def __init__(self):
+        self.playerName = None                          #玩家名字
+        self.playerUUID = None                          #玩家uuid
+        self.permission = None                          #玩家权限
+        self.permission_MCDR = None                     #玩家MCDR权限
+
+    def uuid(self, player: str):
+        return get_uuid(player, serverPath)
+
+
 config = plgConfig()
 configFilePath = None
 serverPath: str
@@ -99,5 +110,45 @@ def get_global_value(path: str):
     serverPath = path
 
 
-def playerJoin():
-    pass
+def get_uuid(playerName: str, dir: str):
+    filePath = '{}/usercache.json'.format(dir)
+
+    with open(filePath, 'r') as usercache_fp:
+        jsonAll = json.load(usercache_fp)                           #解析
+        jsonObjectNum = len(jsonAll)                                #获取对象长度
+        playerUUID = None
+
+        for i in range(jsonObjectNum):
+            if jsonAll[i]['name'] == playerName:                    #检查玩家名字
+                playerUUID = jsonAll[i]['uuid']
+                return playerUUID
+
+def get_server_permission(playerName: str) -> int:
+    opsPath = os.path.join(serverPath, 'ops.json')
+    with open(opsPath, 'r') as opsJson:                         #__init__.py    get_uuid()
+        jsonAll = json.load(opsJson)
+        jsonObjectNum = len(jsonAll)
+
+        for i in range(jsonObjectNum):
+            if playerName == jsonAll[i]['name']:
+                return jsonAll[i]['level']
+
+
+def playerJoin(server: PluginServerInterface, player: str, IPaddress: str):
+    playerObj = Player()
+    playerObj.playerName = player
+    playerObj.playerUUID = playerObj.uuid(player)
+    playerObj.permission = get_server_permission(player)
+    playerObj.permission_MCDR = server.get_permission_level(playerObj.playerName)
+
+    if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
+        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName)
+
+    if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
+        if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
+            config.protectivePlayer[playerObj.playerName] = IPaddress
+            save_config()
+
+        elif config.protectivePlayer[playerObj.playerName] != IPaddress:
+            server.broadcast('{}的信息与记录不符，已被踢出服务器，如记录的信息错误或变更，请向MCDR管理员提出请求！'.format(playerObj.playerName))
+            server.execute('kick ' + playerObj.playerName)
