@@ -79,8 +79,9 @@ def cmd_tree_protect_player(source: CommandSource, name: str):
         return
     dictkv = {name : 'NULL'}
     config.protectivePlayer.update(dictkv)
-    source.reply(dictkv + '已添加')
-    save_config()
+    save_config()    
+    source.reply(str(dictkv) + '已添加')        #这句和save_config()已经换了个位置，不然全局玩家保护时报错就直接退出了，至少先save一下
+
 
 def cmd_tree_all_player_protect_enable(source: CommandSource):
     config.allPlayerProtect = True
@@ -96,3 +97,7 @@ def cmd_tree_all_player_protect_disable(source: CommandSource):
 def get_global_value(path: str):
     global serverPath
     serverPath = path
+
+
+def playerJoin():
+    pass

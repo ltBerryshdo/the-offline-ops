@@ -82,12 +82,13 @@ def on_player_joined(server: PluginServerInterface, player: str, info: Info):   
     config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
 
     if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
-        cmd_tree_protect_player(CommandSource, playerObj.playerName)
+        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName)
 
     if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
         if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
             global IPaddress
             config.protectivePlayer[playerObj.playerName] = IPaddress
+
         elif config.protectivePlayer[playerObj.playerName] != IPaddress:
             server.broadcast('{}的信息与记录不符，已被踢出服务器，如记录的信息错误或变更，请向MCDR管理员提出请求！'.format(playerObj.playerName))
             server.execute('kick ' + playerObj.playerName)
@@ -97,9 +98,9 @@ def on_info(server: PluginServerInterface, info: Info):
         logginInfo = re.search(r'(\w+)\[/(\d+.\d+.\d+.\d+):(\d+)\] logged in with entity id', info.content)
         if logginInfo:
             global IPaddress
-            playerName = logginInfo.group(1)
+            #playerName = logginInfo.group(1)
             IPaddress = logginInfo.group(2)
-            port = logginInfo.group(3)
+            #port = logginInfo.group(3)
 
 
 def get_uuid(playerName: str, dir: str):
