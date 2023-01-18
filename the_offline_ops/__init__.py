@@ -37,6 +37,7 @@ def on_load(server: PluginServerInterface, prev_module):
 def register_command(server: PluginServerInterface):
     server.register_command(
         Literal('!!offlineops').
+            requires(lambda src: src.has_permission(2)).
             runs(lambda src: src.reply('为未开启在线模式（正版验证）的服务器提供了管理员账号保护的一种方法')).
         then(Literal('notOpsPlayerProtect').
             then(Literal('enable').
@@ -51,7 +52,10 @@ def register_command(server: PluginServerInterface):
             then(Literal('enable').
                 runs(cmd_tree_all_player_protect_enable)).
             then(Literal('disable').
-                runs(cmd_tree_all_player_protect_disable)))
+                runs(cmd_tree_all_player_protect_disable))).
+        then(Literal('delIP').
+            then(Literal('playerName')).
+                runs(lambda src, ctx: cmd_tree_del_ip(src, ctx['playerName'])))
     )
 
 def register_help_message(server: PluginServerInterface):

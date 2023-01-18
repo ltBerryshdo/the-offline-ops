@@ -104,6 +104,11 @@ def cmd_tree_all_player_protect_disable(source: CommandSource):
     source.reply('全体玩家保护已关闭')
     save_config()
 
+def cmd_tree_del_ip(source: CommandSource, name: str):
+    config.protectivePlayer[name] = 'NULL'
+    source.reply(name + '的IP已清除')
+    save_config()
+
 
 def get_global_value(path: str):
     global serverPath
