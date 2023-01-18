@@ -72,7 +72,7 @@ def register_help_message(server: PluginServerInterface):
 
 
 def on_player_joined(server: PluginServerInterface, player: str, info: Info):   #玩家进入检查
-    playerJoin()
+    
     playerObj = Player()
     playerObj.playerName = player
     playerObj.playerUUID = playerObj.uuid(player)
