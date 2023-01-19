@@ -40,14 +40,18 @@ def save_config():                                                      #手动�
         json.dump(config.serialize(), cfgFile, ensure_ascii=False, indent=4)
 
 
-def cmd_tree_protect_player_enable(source: CommandSource):
+def cmd_tree_protect_player_enable(source: CommandSource, server: PluginServerInterface):
+    enable = RText(rtr(server, 'offlineops.enable'), RColor.green)
+    noppe = rtr(server, 'offlineops.nopp', enable)
     config.notOpsPlayerProtect = True
-    source.reply('非op玩家保护开启')
+    source.reply(noppe)
     save_config()
 
-def cmd_tree_protect_player_disable(source: CommandSource):
+def cmd_tree_protect_player_disable(source: CommandSource, server: PluginServerInterface):
+    disable = RText(rtr(server, 'offlineops.disable'), RColor.red)
+    noppd = rtr(server, 'offlineops.nopp', disable)
     config.notOpsPlayerProtect = False
-    source.reply('非op玩家保护已关闭')
+    source.reply(noppd)
     save_config()
 '''
 def cmd_tree_sudo_enable(source: CommandSource):
@@ -84,35 +88,49 @@ def cmd_tree_sudo_disable(source: CommandSource):
     source.reply('需要重启服务器才能生效')
     save_config()
 '''
-def cmd_tree_protect_player(source: CommandSource, name: str):
+def cmd_tree_protect_player(source: CommandSource, name: str, server: PluginServerInterface):
     if not config.notOpsPlayerProtect:
-        source.reply('notOpsPlayerProtect已关闭，请先开启此选项')
+        disable = RText(rtr(server, 'offlineops.disable'), RColor.yellow)
+        noppError = rtr(server, 'offlineops.noppError', disable)
+        source.reply(noppError)
         return
     dictkv = {name : 'NULL'}
     config.protectivePlayer.update(dictkv)
-    save_config()    
-    source.reply(str(dictkv) + '已添加')        #这句和save_config()已经换了个位置，不然全局玩家保护时报错就直接退出了，至少先save一下
+    save_config()
+    pp = rtr(server, 'offlineops.pp', str(dictkv))
+    source.reply(pp)        #这句和save_config()已经换了个位置，不然全局玩家保护时报错就直接退出了，至少先save一下
 
 
-def cmd_tree_all_player_protect_enable(source: CommandSource):
+def cmd_tree_all_player_protect_enable(source: CommandSource, server: PluginServerInterface):
+    enable = RText(rtr(server, 'offlineops.enable'), RColor.green)
+    appe = rtr(server, 'offlineops.app', enable)
     config.allPlayerProtect = True
-    source.reply('全体玩家保护已开启')
+    source.reply(appe)
     save_config()
 
-def cmd_tree_all_player_protect_disable(source: CommandSource):
+def cmd_tree_all_player_protect_disable(source: CommandSource, server: PluginServerInterface):
+    disable = RText(rtr(server, 'offlineops.disable'), RColor.red)
+    appd = rtr(server, 'offlineops.app', disable)
     config.allPlayerProtect = False
-    source.reply('全体玩家保护已关闭')
+    source.reply(appd)
     save_config()
 
-def cmd_tree_del_ip(source: CommandSource, name: str):
-    config.protectivePlayer[name] = 'NULL'
-    source.reply(name + '的IP已清除')
+def cmd_tree_del_ip(source: CommandSource, name: str, server: PluginServerInterface):
+    if name == '*':
+        config.protectivePlayer.clear()         #如果是*就清空字典
+    else:
+        del config.protectivePlayer[name]
+    delIP = rtr(server, 'offlineops.delIP', name)
+    source.reply(delIP)
     save_config()
 
 
 def get_global_value(path: str):
     global serverPath
     serverPath = path
+
+def rtr(server: PluginServerInterface, translation_key: str, *args, **kwargs):
+    return server.rtr(translation_key, *args, **kwargs)
 
 
 def get_uuid(playerName: str, dir: str):
@@ -146,14 +164,19 @@ def playerJoin(server: PluginServerInterface, player: str, IPaddress: str):
     playerObj.permission = get_server_permission(player)
     playerObj.permission_MCDR = server.get_permission_level(playerObj.playerName)
 
+    global config
+    config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
+
     if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
-        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName)
+        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server)
 
     if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
         if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
             config.protectivePlayer[playerObj.playerName] = IPaddress
             save_config()
-
+        
         elif config.protectivePlayer[playerObj.playerName] != IPaddress:
-            server.broadcast('{}的信息与记录不符，已被踢出服务器，如记录的信息错误或变更，请向MCDR管理员提出请求！'.format(playerObj.playerName))
+            kick = rtr(server, 'offlineops.kick', playerObj.playerName)
+            server.broadcast(kick)
             server.execute('kick ' + playerObj.playerName)
+        print(config.protectivePlayer[playerObj.playerName])

@@ -1,0 +1,13 @@
+{
+    "offlineops.description": "离线模式账号保护",
+    "offlineops.helpMessage": 
+        "----------!!offlineops命令列表(MCDR权限至少需要2级)----------\n!!offlineops <notOpsPlayerProtect|nopp> [enable|disable] 开启/关闭普通玩家保护\n!!offlineops <protectPlayer|pp> 'playerName' 保护名为'playerName'的玩家\n!!offlineops <allPlayerProtect|app> [enable|disable] 开启/关闭全员保护\n!!offlineops <delIP> 'playerName'|* 删除名为'playerName'的玩家的记录，如果是*的话，则清空整个记录表",
+    "offlineops.enable": "开启",
+    "offlineops.disable": "关闭",
+    "offlineops.nopp": "非op玩家保护已{}",
+    "offlineops.noppError": "notOpsPlayerProtect已{}，请先开启此选项",
+    "offlineops.pp": "{}已添加",
+    "offlineops.app": "全体玩家保护已{}",
+    "offlineops.delIP": "{}的IP记录已清除",
+    "offlineops.kick": "{}的信息与记录不符，已被踢出服务器，如记录的信息错误或变更，请向服务器管理员提出请求！"
+}

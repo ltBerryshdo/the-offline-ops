@@ -35,34 +35,32 @@ def on_load(server: PluginServerInterface, prev_module):
 
 
 def register_command(server: PluginServerInterface):
+    helpMessage = RText(rtr(server, 'offlineops.helpMessage'), RColor.gray)
     server.register_command(
         Literal('!!offlineops').
             requires(lambda src: src.has_permission(2)).
-            runs(lambda src: src.reply('为未开启在线模式（正版验证）的服务器提供了管理员账号保护的一种方法')).
-        then(Literal('notOpsPlayerProtect').
+            runs(lambda src: src.reply(helpMessage)).
+        then(Literal({'notOpsPlayerProtect', 'nopp'}).
             then(Literal('enable').
-                runs(cmd_tree_protect_player_enable)).
+                runs(lambda src: cmd_tree_protect_player_enable(src, server))).
             then(Literal('disable').
-                runs(cmd_tree_protect_player_disable))).
+                runs(lambda src: cmd_tree_protect_player_disable(src, server)))).
                 
-        then(Literal('protectPlayer').
+        then(Literal({'protectPlayer', 'pp'}).
             then(Text('playerName').
-                runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'])))).
-        then(Literal('allPlayerProtect').
+                runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'], server)))).
+        then(Literal({'allPlayerProtect', 'app'}).
             then(Literal('enable').
-                runs(cmd_tree_all_player_protect_enable)).
+                runs(lambda src: cmd_tree_all_player_protect_enable(src, server))).
             then(Literal('disable').
-                runs(cmd_tree_all_player_protect_disable))).
+                runs(lambda src: cmd_tree_all_player_protect_disable(src, server)))).
         then(Literal('delIP').
-            then(Literal('playerName')).
-                runs(lambda src, ctx: cmd_tree_del_ip(src, ctx['playerName'])))
+            then(Text('playerName').
+                runs(lambda src, ctx: cmd_tree_del_ip(src, ctx['playerName'], server))))
     )
 
 def register_help_message(server: PluginServerInterface):
-    server.register_help_message("!!offlineops", {
-        'en_us': '',
-        'zh_cn': '为未开启在线模式（正版验证）的服务器提供了管理员账号保护的一种方法'
-    })                                                                  #注册help内容
+    server.register_help_message("!!offlineops", rtr(server, 'offlineops.description'))                                                                  #注册help内容
 
 
 def on_player_joined(server: PluginServerInterface, player: str, info: Info):   #玩家进入检查
