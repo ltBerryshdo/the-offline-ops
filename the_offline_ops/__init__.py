@@ -25,7 +25,7 @@ def on_load(server: PluginServerInterface, prev_module):
             if 'online-mode' in lines:
                 modeValue = lines.split('=')[1].replace('\n', '')
                 break
-        if modeValue != 'true':                                         #---!!!false!!!---
+        if modeValue != 'false':                                         #---!!!false!!!---
             return
 
     init_config(server)
