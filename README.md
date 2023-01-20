@@ -5,7 +5,7 @@ More plugins click *[here](https://github.com/MCDReforged/PluginCatalogue)*
 ## :page_facing_up: Description
 Provides a method to protect admin and normal player's account in game server, which <strong><em>'online-mode' is 'false'</em></strong><br>
 为<strong><em>未开启在线模式（正版验证）</em></strong>的服务器提供了管理员和普通玩家账号保护的一种方法<br>
-## How the plugin work
+## :telescope: How the plugin work
 This plugin will check player's IP when a player join the server. If the IP is NOT match the record, then kick the player and broadcast in server.<br>
 这个插件会在玩家进入服务器时检查玩家的IP地址，如果与记录不符，则将玩家踢出并全服广播<br>
 ![image](image.png)
@@ -27,7 +27,7 @@ Lightweight, plug and play<br>
 
 But if you have a higher requests for security, You can go to [Plugin Repository](https://github.com/MCDReforged/PluginCatalogue) to find plugins with higher security<br>
 但是如果你对安全性有较高的需求的话，可以去[插件仓库](https://github.com/MCDReforged/PluginCatalogue/blob/master/readme_cn.md)寻找安全性更高的插件
-## Commands
+## :snake: Commands
 **All the commands need MCDR permissions at least level 2**<br>
 **所有命令都需要MCDR 2级权限**<br>
 
@@ -38,7 +38,7 @@ But if you have a higher requests for security, You can go to [Plugin Repository
 |`!!offlineops` `protectPlayer`/ `pp`|add protected player  添加受保护的玩家|
 |`!!offlineops` `allPlayerProtect`/ `app`|all players protect options  全体玩家保护开关|
 |`!!offlineops` `delIP`|delete player's or all the IP record  清除对应或全部玩家的IP记录|
-## Config
+## :wrench: Config
 ``` json
 {
     "notOpsPlayerProtect": true,    //nomal player protect普通玩家保护
@@ -48,11 +48,11 @@ But if you have a higher requests for security, You can go to [Plugin Repository
     }
 }
 ```
-## Issue
+## :exclamation: Issue
 In extreme cases (such as manually modifying the player's IP in the configuration file, etc.), the IP check may be error-prone, it is recommended to restart the plugin with the following command and try again:<br>
 有极端情况（如手动修改配置文件中玩家的IP等等）IP检查可能会出现错误，建议用以下命令将插件重启，并再次尝试：
 `!!MCDR plugin reload the_offline_ops`
-## Details
+## :mag: Details
 Player's IP is the parsed result from the server or from the console:<br>
 玩家IP的获取是在这条服务器标准输出中获取的：
 > lightberryshdo[/127.0.0.1:54095] logged in with entity id 220 at (5.907554675563178, 64.0, 8.053519850174403)
