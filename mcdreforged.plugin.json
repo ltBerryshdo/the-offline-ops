@@ -2,7 +2,10 @@
     "id": "the_offline_ops",
     "version": "1.0",
     "name": "The Offline ops",
-    "description": "为未开启在线模式（正版验证）的服务器提供了管理员账号保护的一种方法。",
+    "description": {
+        "en_us": "Provides a method to protect admin and normal player's account in game server, which 'online-mode' is 'false'",
+        "zh_cn": "为未开启在线模式（正版验证）的服务器提供了管理员和普通玩家账号保护的一种方法"
+    },
     "author": "ltBerryshdo",
     "link": "https://github.com/ltBerryshdo/the_offline_ops",
     "dependencies": {
