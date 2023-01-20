@@ -2,24 +2,28 @@
 A **[MCDReforged](https://github.com/Fallen-Breath/MCDReforged) plugin**<br>
 More plugins click *[here](https://github.com/MCDReforged/PluginCatalogue)*
 
-## Description
-Provides a method to protect admin and normal player's account in game server, which <font color=orange>'online-mode' is 'false'</font><br>
-为<font color=orange>未开启在线模式（正版验证）</font>的服务器提供了管理员和普通玩家账号保护的一种方法<br>
+## :page_facing_up: Description
+Provides a method to protect admin and normal player's account in game server, which <strong><em>'online-mode' is 'false'</em></strong><br>
+为<strong><em>未开启在线模式（正版验证）</em></strong>的服务器提供了管理员和普通玩家账号保护的一种方法<br>
 ## How the plugin work
 This plugin will check player's IP when a player join the server. If the IP is NOT match the record, then kick the player and broadcast in server.<br>
 这个插件会在玩家进入服务器时检查玩家的IP地址，如果与记录不符，则将玩家踢出并全服广播<br>
 ![image](image.png)
+<br>
 
 If you don't like filling in some difficult configuration file and feel that checking the player's IP is enough, you can try this plugin<br>
 如果你不喜欢去摆弄一些让人看不懂的配置文件，并且觉得检测玩家的IP就足够的话，可以试试这个插件<br>
+<br>
 
 Use `!!offlineops` commmand to view the configuration commands and no need to change the config file by yourself<br>
 通过`!!offlineops`查看配置命令。无需动手改config文件<br>
+<br>
 
 Put the \*.mcdr file in your MCDR plugin directories, MCDR will load it and begin to work<br>
 Lightweight, plug and play<br>
 把\*.mcdr文件丢入插件文件夹，就开始工作了<br>
 轻量化，即插即用<br>
+<br>
 
 But if you have a higher requests for security, You can go to [Plugin Repository](https://github.com/MCDReforged/PluginCatalogue) to find plugins with higher security<br>
 但是如果你对安全性有较高的需求的话，可以去[插件仓库](https://github.com/MCDReforged/PluginCatalogue/blob/master/readme_cn.md)寻找安全性更高的插件
@@ -27,11 +31,13 @@ But if you have a higher requests for security, You can go to [Plugin Repository
 **All the commands need MCDR permissions at least level 2**<br>
 **所有命令都需要MCDR 2级权限**<br>
 
-`!!offlineops`:view the commands list  查看命令列表<br>
-`!!offlineops` `notOpsPlayerProtect`| `nopp`:nomal player protect options  非管理员玩家保护开关<br>
-`!!offlineops` `protectPlayer`| `pp`:add protected player  添加受保护的玩家<br>
-`!!offlineops` `allPlayerProtect`| `app`:all players protect options  全体玩家保护开关<br>
-`!!offlineops` `delIP`:delete player's or all the IP record  清除对应或全部玩家的IP记录<br>
+|command|description|
+|---------|-------|
+|`!!offlineops`|view the commands list  查看命令列表|
+|`!!offlineops` `notOpsPlayerProtect`/ `nopp`|nomal player protect options  非管理员玩家保护开关|
+|`!!offlineops` `protectPlayer`/ `pp`|add protected player  添加受保护的玩家|
+|`!!offlineops` `allPlayerProtect`/ `app`|all players protect options  全体玩家保护开关|
+|`!!offlineops` `delIP`|delete player's or all the IP record  清除对应或全部玩家的IP记录|
 ## Config
 ``` json
 {
