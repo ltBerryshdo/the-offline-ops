@@ -164,9 +164,6 @@ def playerJoin(server: PluginServerInterface, player: str, IPaddress: str):
     playerObj.permission = get_server_permission(player)
     playerObj.permission_MCDR = server.get_permission_level(playerObj.playerName)
 
-    global config
-    config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
-
     if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
         cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server, IPaddress)
 
