@@ -88,13 +88,13 @@ def cmd_tree_sudo_disable(source: CommandSource):
     source.reply('需要重启服务器才能生效')
     save_config()
 '''
-def cmd_tree_protect_player(source: CommandSource, name: str, server: PluginServerInterface):
+def cmd_tree_protect_player(source: CommandSource, name: str, server: PluginServerInterface, IPaddress: str):
     if not config.notOpsPlayerProtect:
         disable = RText(rtr(server, 'offlineops.disable'), RColor.yellow)
         noppError = rtr(server, 'offlineops.noppError', disable)
         source.reply(noppError)
         return
-    dictkv = {name : 'NULL'}
+    dictkv = {name : IPaddress}
     config.protectivePlayer.update(dictkv)
     save_config()
     pp = rtr(server, 'offlineops.pp', str(dictkv))
@@ -168,15 +168,17 @@ def playerJoin(server: PluginServerInterface, player: str, IPaddress: str):
     config = server.load_config_simple(default_config = config.serialize(), target_class = plgConfig)
 
     if config.allPlayerProtect and (playerObj.playerName not in config.protectivePlayer.keys()):    #全体玩家保护已开启，并有未记录玩家进入时
-        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server)
+        cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server, IPaddress)
 
     if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
+        if playerObj.playerName not in config.protectivePlayer.keys():                  #有未记录的玩家进入时
+            cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server, IPaddress)
+            '''
         if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
             config.protectivePlayer[playerObj.playerName] = IPaddress
-            save_config()
+            save_config()'''
         
         elif config.protectivePlayer[playerObj.playerName] != IPaddress:
             kick = rtr(server, 'offlineops.kick', playerObj.playerName)
             server.broadcast(kick)
             server.execute('kick ' + playerObj.playerName)
-        print(config.protectivePlayer[playerObj.playerName])
