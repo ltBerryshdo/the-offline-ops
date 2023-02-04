@@ -94,12 +94,28 @@ def cmd_tree_protect_player(source: CommandSource, name: str, server: PluginServ
         noppError = rtr(server, 'offlineops.noppError', disable)
         source.reply(noppError)
         return
-    dictkv = {name : IPaddress}
+    dictkv = {name : [IPaddress]}               #集合set()用不了
     config.protectivePlayer.update(dictkv)
     save_config()
-    pp = rtr(server, 'offlineops.pp', str(dictkv))
-    source.reply(pp)        #这句和save_config()已经换了个位置，不然全局玩家保护时报错就直接退出了，至少先save一下
+    #pp = rtr(server, 'offlineops.pp', str(dictkv))
+    #source.reply(pp)        #这句和save_config()已经换了个位置，不然全局玩家保护时报错就直接退出了，至少先save一下
 
+def cmd_tree_multiIP_players(source: CommandSource, server: PluginServerInterface, name: str):         #追加IP
+    config.protectivePlayer[name].append('NULL')
+    mp = rtr(server, 'offlineops.mp', name)
+    source.reply(mp)
+    save_config()
+
+def cmd_tree_multiIP_del(source: CommandSource, server: PluginCommandSource):
+    for keys in config.protectivePlayer.keys():
+        for i in range(0, len(config.protectivePlayer[keys])):
+            config.protectivePlayer[keys].remove('NULL')
+            if not config.protectivePlayer[keys].count('NULL'):
+                break
+
+    save_config()
+    mpdel = rtr(server, 'offlineops.mpdel')
+    source.reply(mpdel)
 
 def cmd_tree_all_player_protect_enable(source: CommandSource, server: PluginServerInterface):
     enable = RText(rtr(server, 'offlineops.enable'), RColor.green)
@@ -168,14 +184,15 @@ def playerJoin(server: PluginServerInterface, player: str, IPaddress: str):
         cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server, IPaddress)
 
     if (playerObj.permission != None) or (config.notOpsPlayerProtect and (playerObj.playerName in config.protectivePlayer.keys())): #是op或是受保护的玩家
-        if playerObj.playerName not in config.protectivePlayer.keys():                  #有未记录的玩家进入时
+        if playerObj.playerName not in config.protectivePlayer.keys():                  #有未记录的op进入时
             cmd_tree_protect_player(InfoCommandSource, playerObj.playerName, server, IPaddress)
-            '''
-        if config.protectivePlayer[playerObj.playerName] == 'NULL':     #如果没记录IP
-            config.protectivePlayer[playerObj.playerName] = IPaddress
-            save_config()'''
-        
-        elif config.protectivePlayer[playerObj.playerName] != IPaddress:
-            kick = rtr(server, 'offlineops.kick', playerObj.playerName)
-            server.broadcast(kick)
-            server.execute('kick ' + playerObj.playerName)
+
+        if IPaddress not in config.protectivePlayer[playerObj.playerName]:
+            if 'NULL' in config.protectivePlayer[playerObj.playerName]:
+                config.protectivePlayer[playerObj.playerName].remove('NULL')
+                config.protectivePlayer[playerObj.playerName].append(IPaddress)
+                save_config()
+            else:    
+                kick = rtr(server, 'offlineops.kick', playerObj.playerName)
+                server.broadcast(kick)
+                server.execute('kick ' + playerObj.playerName)

@@ -48,19 +48,24 @@ def register_command(server: PluginServerInterface):
                 
         then(Literal({'protectPlayer', 'pp'}).
             then(Text('playerName').
-                runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'], server)))).
+                runs(lambda src, ctx: cmd_tree_protect_player(src, ctx['playerName'], server, IPaddress = 'NULL')))).
         then(Literal({'allPlayerProtect', 'app'}).
             then(Literal('enable').
                 runs(lambda src: cmd_tree_all_player_protect_enable(src, server))).
             then(Literal('disable').
                 runs(lambda src: cmd_tree_all_player_protect_disable(src, server)))).
+        then(Literal('multi-ip').
+            then(Text('playerName').
+                runs(lambda src, ctx: cmd_tree_multiIP_players(src, server, ctx['playerName']))).
+            then(Literal('del').
+                runs(lambda src: cmd_tree_multiIP_del(src, server)))).
         then(Literal('delIP').
             then(Text('playerName').
                 runs(lambda src, ctx: cmd_tree_del_ip(src, ctx['playerName'], server))))
     )
 
 def register_help_message(server: PluginServerInterface):
-    server.register_help_message("!!offlineops", rtr(server, 'offlineops.description'))                                                                  #注册help内容
+    server.register_help_message("!!offlineops", rtr(server, 'offlineops.description'))     #注册help内容
 
 
 def on_player_joined(server: PluginServerInterface, player: str, info: Info):   #玩家进入检查

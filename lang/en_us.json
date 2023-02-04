@@ -1,12 +1,14 @@
 {
     "offlineops.description": "protect player's account in offline mode server",
     "offlineops.helpMessage": 
-        "----------!!offlineops commands list(MCDR permissions require at least level 2)----------\n!!offlineops <notOpsPlayerProtect|nopp> [enable|disable] enable/disable normal player protect\n!!offlineops <protectPlayer|pp> 'playerName' protect player named 'playerName'\n!!offlineops <allPlayerProtect|app> [enable|disable] enable/disable all players protect\n!!offlineops <delIP> 'playerName'|* delete the player named 'playerName''s IP record, If you use * ,it will clear the whole record",
+        "----------!!offlineops commands list(MCDR permissions require at least level 2)----------\n!!offlineops <notOpsPlayerProtect|nopp> [enable|disable] enable/disable normal player protect\n!!offlineops <protectPlayer|pp> 'playerName' protect player named 'playerName'\n!!offlineops <allPlayerProtect|app> [enable|disable] enable/disable all players protect\n!!offlineops <multi-ip> 'playerName'|del give 'playerName' a chance to append, or delete the chance\n!!offlineops <delIP> 'playerName'|* delete the player named 'playerName''s IP record, If you use * ,it will clear the whole record",
     "offlineops.enable": "enabled",
     "offlineops.disable": "disabled",
     "offlineops.nopp": "not-operator-player-protect mode is {}",
     "offlineops.noppError": "not-operator-player-protect mode is {},please enable that options before this",
     "offlineops.pp": "{} is added",
+    "offlineops.mp": "{} get a chance to append new IP",
+    "offlineops.mpdel": "the chance to append new IP all has been delete",
     "offlineops.app": "all-player-protect mode is {}",
     "offlineops.delIP": "{}'s IP info is cleared",
     "offlineops.kick": "{}'s info dose NOT match the record and has been kicked out, if the recorded information is INCORRECT OR HAS CHANGED, please make a request to the server administrator"
